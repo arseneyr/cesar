@@ -22,12 +22,27 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [[ 'es2015', { modules: false } ], 'react']
+              presets: [[ 'es2015', { modules: false } ], 'react'],
+              plugins: ['transform-class-properties']
             }
           }
         ]
+      },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      },
+      {
+        test: /(png|woff|woff2|ttf|svg|eot)$/,
+        use: ['file-loader']
       }
     ]
   },
-  plugins: [new HtmlWebpackPlugin()]
+  plugins: [new HtmlWebpackPlugin({
+
+    template: path.resolve(__dirname, './template.html')
+  })],
+  devServer: {
+    host: '0.0.0.0'
+  }
 }

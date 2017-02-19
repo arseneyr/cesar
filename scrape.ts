@@ -2,7 +2,6 @@ import * as rp from 'request-promise';
 import * as Promise from 'bluebird';
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
-import * as Fuse from 'fuse.js';
 
 Promise.promisifyAll(fs);
 
@@ -43,16 +42,3 @@ function getAll() {
   });
 }
 
-let search = new (<any>Fuse)(JSON.parse(fs.readFileSync('out.json', 'utf8')), {
-  shouldSort: true,
-  threshold: 0.3999,
-  location: 0,
-  distance: 100,
-  maxPatternLength: 32,
-  minMatchCharLength: 2,
-  keys: ['title', 'artist']
-});
-
-console.time('s');
-search.search('crazy');
-console.timeEnd('s');
