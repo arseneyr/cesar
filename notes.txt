@@ -1,0 +1,5 @@
+Completion suggester did not work. No ranking based on popularity, only custom weights (does that mean you must recompute weights when new documents enter??)
+
+Term suggester did not work at query time. Need more exploration though (has options for popularity).
+
+Edge n-grams are likely to work as part of the binary filter. Still unclear how to sort the options though.
