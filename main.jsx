@@ -6,7 +6,7 @@ import { Search, Container, Input } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.css'
 
 const client = new es.Client ({
-  host: 'https://db.lastgrind.com:443'
+  host: 'https://search.lastgrind.com:443'
 })
 
 class Search2 extends React.Component {
@@ -21,6 +21,7 @@ class Search2 extends React.Component {
     client.search({
       index: 'songs',
       body: {
+        size: 300,
         query: {
           match: {
             _all: {
@@ -41,7 +42,6 @@ class Search2 extends React.Component {
     }
 
     e.preventDefault();
-    alert('cool')
   }
 
   render() {
