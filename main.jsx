@@ -1,14 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import es from 'elasticsearch';
 import { Search, Container, Input, SearchResult, Loader, Segment, Divider } from 'semantic-ui-react';
 import Waypoint from 'react-waypoint';
-
-import 'semantic-ui-css/semantic.css'
-
-const client = new es.Client ({
-  host: 'https://search.lastgrind.com:443'
-})
+import 'whatwg-fetch';
 
 class Search2 extends React.Component {
 
@@ -32,11 +26,9 @@ class Search2 extends React.Component {
       this.setState({results: [], query, loading: true})
     }
 
-    client.search({
-      index: 'songs',
-      size: 20,
-      from,
-      body: {
+    fetch('https://search.lastgrind.com/songs/_search', {
+      method: 'POST',
+      body: JSON.stringify({
         size: 300,
         query: {
           match: {
@@ -46,8 +38,10 @@ class Search2 extends React.Component {
             }
           }
         }
-      }
-    }, (ajaxErr,r) => {
+      })
+    })
+    .then(res => res.json())
+    .then(r => {
       if (query != this.state.query) return;
       let results = r.hits.hits.map((e,i) => ({
         onClick: e => e.preventDefault(),

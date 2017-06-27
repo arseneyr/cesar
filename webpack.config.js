@@ -2,9 +2,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './main.jsx',
+  entry: ['whatwg-fetch', './main.jsx'],
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.[hash].js',
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
@@ -27,14 +27,6 @@ module.exports = {
             }
           }
         ]
-      },
-      {
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
-      },
-      {
-        test: /(png|woff|woff2|ttf|svg|eot)$/,
-        use: ['file-loader']
       }
     ]
   },
