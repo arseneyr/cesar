@@ -13,6 +13,8 @@
     "bluebird": "^3.4.7",
     "cheerio": "^0.22.0",
     "fuse.js": "^2.6.1",
+    "preact": "^8.1.0",
+    "preact-compat": "^3.16.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-waypoint": "^5.1.0",
