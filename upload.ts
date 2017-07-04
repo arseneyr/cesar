@@ -50,60 +50,6 @@ function createIndex() {
   .catch(console.log)
 }
 
-function stopwordReplacer(string) {
-  const matches = string.match(/(.*), (THE|A)$/i);
-  return matches ? `${matches[2]} ${matches[1]}` : string;
-}
-
-function preprocessSongs() {
-  let ret = [];
-  let videos = {};
-
-  songs.forEach(e => {
-    const artist = e.artist.replace(/^(.*)- /i,'');
-    const isVideo = /^\(V\) /.test(e.title);
-    const title = stopwordReplacer(e.title.replace(/^\(V\) /,''));
-    let artist_split = artist.split('/');
-    // Dammit AC/DC
-    if (artist_split[0].toLowerCase() == 'ac') {
-      artist_split = [artist];
-    }
-
-    artist_split = artist_split.map(a => a.trim()).map(stopwordReplacer)
-
-    let obj = {
-      title,
-      artist: artist_split.join(' & '),
-      video: null,
-      _id: e.num
-    }
-
-    if (isVideo) {
-      videos[[obj.title,obj.artist].join()] = obj;
-    } else {
-      ret.push(obj);
-    }
-  })
-
-  ret = ret.map(e => {
-    const vid = videos[[e.title,e.artist].join()];
-    if (vid) {
-      e.video = vid._id;
-      delete videos[[e.title,e.artist].join()];
-    }
-
-    return e;
-  });
-
-  for (let vid in videos) {
-    ret.push({
-      ...videos[vid],
-      video: videos[vid]._id
-    })
-  }
-
-  return ret;
-}
 
 function upload(processedSongs) {
   let song_bulk = processedSongs.map(e => [
