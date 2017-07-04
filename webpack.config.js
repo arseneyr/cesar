@@ -9,10 +9,6 @@ module.exports = {
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
-    alias: {
-      "react": "preact-compat",
-      "react-dom": "preact-compat"
-    },
     extensions: [
       '.js',
       '.jsx'
@@ -28,7 +24,7 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: [[ 'es2015', { modules: false } ], 'react'],
-              plugins: ['transform-class-properties', 'transform-object-rest-spread']
+              plugins: ['lodash', 'transform-class-properties', 'transform-object-rest-spread']
             }
           }
         ]
@@ -37,7 +33,8 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin({
     template: path.resolve(__dirname, './template.html')
-  })],
+  }),
+  new LodashModuleReplacementPlugin],
   devServer: {
     host: '0.0.0.0'
   }
