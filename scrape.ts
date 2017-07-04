@@ -5,13 +5,16 @@ import * as fs from 'fs';
 
 Promise.promisifyAll(fs);
 
-let numberOfPages = 0;
+enum Languages {
+  English,
+  Spanish
+}
 
-function makeRequest(offset) {
-  return rp(`http://www.karaokechamp.com/kcsearch/ajaxGadgetSearch.php?type=ajax&ar&ti&ln=English&nr&pc=1&currentpage=${offset}&lines=5000`)
+function makeRequest(language: Languages, offset: number, count: number) {
+  return rp(`http://kjdata.karaokechamp.com/kcsearch/ajaxGadgetSearch.php?type=ajax&ar&ti=&ln=${Languages[language]}&nr=&pc=1&currentpage=${offset}&lines=${count}`)
   .then(body => {
     let $ = cheerio.load(body);
-    numberOfPages = parseInt($('totalpage').text(), 10);
+    let totalCount = parseInt($('res_num').text(), 10);
     $ = cheerio.load($('result').text());
     let arr = [];
     $('.containers').each((i,e) => {
@@ -19,26 +22,27 @@ function makeRequest(offset) {
       arr.push({
         title: g.find('.title').text().trim(),
         artist: g.find('.artist').text().trim(),
-        num: g.find('.songNo').text().trim()
+        num: g.find('.songNo').text().trim().substring(1)
       });
     });
 
     console.log(`Got ${arr.length} at offset ${offset}`);
-    return arr;
+    return { results: arr, totalCount };
   });
 }
 
-function getAll() {
-  return makeRequest(1).then(arr => {
-    let p = Promise.resolve(arr);
-    for (let i = 2; i <= numberOfPages; i++) {
-      p = p.then(newArr => {
-        return makeRequest(i)
-          .then(res => newArr.concat(res));
-      })
-    }
-
-    return p;
-  });
+function countResults(language: Languages) {
+  return makeRequest(language, 1, 1).get('totalCount');
 }
 
+function getAll(language: Languages) {
+  return countResults(language)
+    .then(count => {
+      let p = Promise.resolve([]);
+      for (let i = 1; i <= Math.ceil(count / 5000); i++) {
+        p = p .then(arr => makeRequest(language, i, 5000).then(res => arr.concat(res.results)));
+      }
+
+      return p;
+    })
+}
