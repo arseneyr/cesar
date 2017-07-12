@@ -115,7 +115,8 @@ function getExistingSongs() {
   }
 
   return client.search({index: 'songs', scroll: '1m', q: '*:*', size:5000})
-    .then(processResponse);
+    .then(processResponse)
+    .catch(() => ({}));
 }
 
 function mergeSongDates(newSongs, existingSongs) {
@@ -172,12 +173,27 @@ function swapAlias(newIndexName: string) {
   });
 }
 
-function getExistingIndex() {
-  return client.indices.get({index: 'songs*'}).then(res => Object.keys(res)[0]);
-}
-
 function getExistingSongCount() {
-  return client.search({index: 'song_count', q: '*:*'}).then(r => (r.hits.hits[0]._source as any).count);
+  return client.search({index: 'song_count', q: '*:*'})
+    .then(r => (r.hits.hits[0]._source as any).count)
+    .catch(() => client.indices.create({
+      index: 'song_count',
+      body: {
+        settings: {
+          index: {
+            number_of_shards: 1
+          }
+        },
+        mappings: {
+          song_count: {
+            properties: {
+              count: {type: 'long'}
+            }
+          }
+        }
+      }
+    }).then(() => client.index({index: 'song_count', type: 'count', body: {count: 0}}))
+    .then(() => getExistingSongCount()));
 }
 
 function updateExistingCount(newCount: number) {
