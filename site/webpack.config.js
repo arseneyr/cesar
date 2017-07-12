@@ -34,7 +34,7 @@ module.exports = {
   plugins: [new HtmlWebpackPlugin({
     template: path.resolve(__dirname, './template.html')
   }),
-  new LodashModuleReplacementPlugin],
+  new LodashModuleReplacementPlugin({flattening: true})],
   devServer: {
     host: '0.0.0.0'
   }

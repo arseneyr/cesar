@@ -239,4 +239,4 @@ function tryScraping() {
 }
 
 // Scrape once every 6 hours
-setInterval(tryScraping, 1000*60*60*6);
+tryScraping().then(() => setInterval(tryScraping, 1000*60*60*6));
