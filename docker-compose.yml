@@ -12,6 +12,8 @@ services:
       LETSENCRYPT_HOST: '${ELASTICSEARCH_URL}'
       LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
       VIRTUAL_HOST: '${ELASTICSEARCH_URL}:9200'
+      http.cors.enabled: 'true'
+      http.cors.allow-origin: 'https://${ROCKBOX_SITE_URL}'   
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.0
