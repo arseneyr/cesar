@@ -218,9 +218,9 @@ function uploadSongs(songs, index) {
 
 function tryScraping() {
   return Promise.join(
-    getExistingSongCount(),
     getNewSongCount(Languages.English),
-    (existingSongCount, newResultCount) => {
+    getExistingSongCount(),
+    (newResultCount, existingSongCount) => {
       if (existingSongCount === newResultCount) {
         return;
       }
@@ -238,4 +238,5 @@ function tryScraping() {
   )
 }
 
-setInterval(tryScraping, 5000);
+// Scrape once every 6 hours
+setInterval(tryScraping, 1000*60*60*6);
