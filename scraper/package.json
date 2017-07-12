@@ -1,0 +1,26 @@
+{
+  "name": "songscraper",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "cheerio": "^0.22.0",
+    "elasticsearch": "^13.2.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "ts-node": "^3.2.0",
+    "typescript": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.8",
+    "@types/elasticsearch": "^5.0.14",
+    "@types/node": "^7.0.5"
+  },
+  "keywords": [],
+  "description": ""
+}
