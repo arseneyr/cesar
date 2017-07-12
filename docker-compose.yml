@@ -1,0 +1,51 @@
+version: "2"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    network_mode: bridge
+    restart: always
+    environment:
+      http.host: '0.0.0.0'
+      transport.host: '127.0.0.1'
+      xpack.security.enabled: 'false'
+      LETSENCRYPT_HOST: '${ELASTICSEARCH_URL}'
+      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
+      VIRTUAL_HOST: '${ELASTICSEARCH_URL}:9200'
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.5.0
+    links:
+      - elasticsearch
+    network_mode: bridge
+    restart: always
+    environment:
+      XPACK_SECURITY_ENABLED: 'false'
+      LETSENCRYPT_HOST: '${KIBANA_URL}'
+      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
+      VIRTUAL_HOST: '${KIBANA_URL}:5601'
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+
+  rockbox-site:
+    build:
+      context: ./site
+    image: rockbox-site:latest
+    network_mode: bridge
+    restart: always
+    environment:
+      LETSENCRYPT_HOST: '${ROCKBOX_SITE_URL}'
+      LETSENCRYPT_EMAIL: '${LETSENCRYPT_EMAIL}'
+      VIRTUAL_HOST: '${ROCKBOX_SITE_URL}'
+
+  rockbox-scraper:
+    build:
+      context: ./scraper
+    image: rockbox-scraper:latest
+    network_mode: bridge
+    restart: always
+    links:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+
+
