@@ -28,6 +28,7 @@ class Search2 extends React.Component {
 
     fetch('https://search.lastgrind.com/songs/_search', {
       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         size: 300,
         query: {
